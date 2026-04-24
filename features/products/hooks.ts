@@ -1,9 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchProducts } from "./api";
+import { useSelector } from "react-redux";
+import { processProducts } from "./utils";
+import { RootState } from "@/store";
 
 export function useProducts() {
-  return useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
+  const { products, filters, sort } = useSelector(
+    (state: RootState) => state.products
+  );
+
+  const data = processProducts(products, filters, sort || "");
+
+  return { data };
 }
