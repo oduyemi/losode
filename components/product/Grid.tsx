@@ -9,11 +9,9 @@ import { Pagination } from "antd";
 export const ProductGrid = () => {
   const filters = useSelector((state: RootState) => state.products.filters);
   const { data, isLoading, isError } = useProducts(filters);
-
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8); // default desktop
+  const [pageSize, setPageSize] = useState(8);
 
-  // 🔥 Responsive page size (2 rows)
   useEffect(() => {
     const updatePageSize = () => {
       const width = window.innerWidth;
@@ -32,7 +30,6 @@ export const ProductGrid = () => {
     return () => window.removeEventListener("resize", updatePageSize);
   }, []);
 
-  // 🔁 Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [filters]);
@@ -47,9 +44,7 @@ export const ProductGrid = () => {
 
   return (
     <div className="space-y-8">
-      
-      {/* GRID (MAX 2 ROWS) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedData.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

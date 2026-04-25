@@ -11,8 +11,7 @@ exports.ProductGrid = function () {
     var filters = react_redux_1.useSelector(function (state) { return state.products.filters; });
     var _a = hooks_1.useProducts(filters), data = _a.data, isLoading = _a.isLoading, isError = _a.isError;
     var _b = react_1.useState(1), page = _b[0], setPage = _b[1];
-    var _c = react_1.useState(8), pageSize = _c[0], setPageSize = _c[1]; // default desktop
-    // 🔥 Responsive page size (2 rows)
+    var _c = react_1.useState(8), pageSize = _c[0], setPageSize = _c[1];
     react_1.useEffect(function () {
         var updatePageSize = function () {
             var width = window.innerWidth;
@@ -30,7 +29,6 @@ exports.ProductGrid = function () {
         window.addEventListener("resize", updatePageSize);
         return function () { return window.removeEventListener("resize", updatePageSize); };
     }, []);
-    // 🔁 Reset page when filters change
     react_1.useEffect(function () {
         setPage(1);
     }, [filters]);

@@ -13,77 +13,29 @@ export interface FilterState {
   search: string;
 }
 
-
 export function filterProducts(
   products: Product[],
   filters: FilterState
 ): Product[] {
   return products.filter((product) => {
-    // CATEGORY
     if (
       filters.category.length &&
-      !filters.category.includes(product.category)
+      !filters.category.includes(product.category.name)
     ) {
       return false;
     }
 
-    // SIZE
-    if (
-      filters.size.length &&
-      (!product.size ||
-        !filters.size.some((s) => product.size?.includes(s)))
-    ) {
-      return false;
+    if (filters.priceRange) {
+      const [min, max] = filters.priceRange;
+      if (product.price < min || product.price > max) return false;
     }
 
-    // OCCASION
-    if (
-      filters.occasion.length &&
-      (!product.occasion ||
-        !filters.occasion.includes(product.occasion))
-    ) {
-      return false;
-    }
-
-    // FIT
-    if (
-      filters.fit.length &&
-      (!product.fit || !filters.fit.includes(product.fit))
-    ) {
-      return false;
-    }
-
-    // RETURNS
-    if (
-      filters.returns.length &&
-      (!product.returns ||
-        !filters.returns.includes(product.returns))
-    ) {
-      return false;
-    }
-
-    // COLOR
-    if (
-      filters.color.length &&
-      (!product.color ||
-        !filters.color.some((c) => product.color?.includes(c)))
-    ) {
-      return false;
-    }
-
-    // PRICE
-    const [min, max] = filters.priceRange;
-    if (product.price < min || product.price > max) {
-      return false;
-    }
-
-    // SEARCH
     if (filters.search) {
       const search = filters.search.toLowerCase();
 
       const matches =
-        product.name.toLowerCase().includes(search) ||
-        product.category.toLowerCase().includes(search) ||
+        product.title.toLowerCase().includes(search) ||
+        product.category.name.toLowerCase().includes(search) ||
         product.brand?.toLowerCase().includes(search);
 
       if (!matches) return false;
@@ -91,7 +43,7 @@ export function filterProducts(
 
     return true;
   });
-};
+}
 
 
 export function sortProducts(products: Product[], sort: string) {
@@ -110,7 +62,7 @@ export function sortProducts(products: Product[], sort: string) {
     default:
       return products;
   }
-};
+}
 
 
 export function processProducts(
@@ -127,31 +79,33 @@ const mockSizes = ["UK 8-M", "UK 10-M", "UK 12-L", "UK 14-XL"];
 const mockColors = ["Black", "Blue", "Red", "White", "Green"];
 const mockFits = ["Loose Fit", "Regular Fit", "Tight Fit"];
 
-function isValidImage(url?: string) {
-  if (!url) return false;
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "");
+}
 
-  // block localhost / invalid
-  if (url.includes("127.0.0.1") || url.includes("localhost")) {
-    return false;
-  }
 
-  return url.startsWith("http");
+function generateSlug(title: string, id: number) {
+  return `${title}`
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, "-") + `-${id}`;
 }
 
 export function transformProduct(api: ApiProduct): Product {
   return {
-    id: String(api.id),
-    name: api.title || "Untitled",
+    id: api.id,
+    title: api.title || "Untitled",
+    slug: generateSlug(api.title, api.id), // ✅ FIX
     price: api.price || 0,
-    image: isValidImage(api.images?.[0])
-      ? api.images[0]
-      : "/placeholder.png",
-    category: api.category?.name || "",
-    brand: "Platzi Store",
-    size: [],
-    color: [],
-    fit: "",
-    occasion: "",
-    returns: "",
+    description: api.description || "",
+    images: api.images || [],
+    category: api.category,
+
+    creationAt: "",
+    updatedAt: "",
   };
 }
