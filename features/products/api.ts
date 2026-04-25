@@ -1,7 +1,7 @@
 import { FilterState } from "./utils";
 
 
-const BASE_URL = "https://api.escuelajs.co/api/v1";
+export const BASE_URL = "https://api.escuelajs.co/api/v1";
 
 
 export function buildQueryParams(filters: FilterState) {

@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.fetchCategories = exports.fetchProducts = exports.buildQueryParams = void 0;
-var BASE_URL = "https://api.escuelajs.co/api/v1";
+exports.fetchCategories = exports.fetchProducts = exports.buildQueryParams = exports.BASE_URL = void 0;
+exports.BASE_URL = "https://api.escuelajs.co/api/v1";
 function buildQueryParams(filters) {
     var params = new URLSearchParams();
     if (filters.search) {
@@ -60,7 +60,7 @@ function fetchProducts(filters) {
             switch (_a.label) {
                 case 0:
                     query = filters ? "?" + buildQueryParams(filters) : "";
-                    return [4 /*yield*/, fetch(BASE_URL + "/products/" + query, {
+                    return [4 /*yield*/, fetch(exports.BASE_URL + "/products/" + query, {
                             next: { revalidate: 60 }
                         })];
                 case 1:
@@ -78,7 +78,7 @@ function fetchCategories() {
         var res;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch(BASE_URL + "/categories", {
+                case 0: return [4 /*yield*/, fetch(exports.BASE_URL + "/categories", {
                         next: { revalidate: 3600 }
                     })];
                 case 1:

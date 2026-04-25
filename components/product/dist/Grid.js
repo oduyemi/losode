@@ -1,5 +1,12 @@
 "use client";
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 exports.ProductGrid = void 0;
 var react_redux_1 = require("react-redux");
@@ -33,9 +40,9 @@ exports.ProductGrid = function () {
         setPage(1);
     }, [filters]);
     if (isLoading)
-        return React.createElement("p", null, "Loading products...");
+        return (React.createElement("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-6" }, __spreadArrays(Array(8)).map(function (_, i) { return (React.createElement("div", { key: i, className: "h-[350px] bg-gray-100 animate-pulse rounded-xl" })); })));
     if (isError)
-        return React.createElement("p", null, "Failed to load products");
+        return (React.createElement("div", { className: "text-center py-10 text-gray-500" }, "Failed to load products. Try again."));
     if (!data || data.length === 0)
         return React.createElement("p", null, "No products found");
     // 🔥 Paginate

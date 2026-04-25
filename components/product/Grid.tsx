@@ -34,8 +34,21 @@ export const ProductGrid = () => {
     setPage(1);
   }, [filters]);
 
-  if (isLoading) return <p>Loading products...</p>;
-  if (isError) return <p>Failed to load products</p>;
+  if (isLoading)
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="h-[350px] bg-gray-100 animate-pulse rounded-xl" />
+        ))}
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="text-center py-10 text-gray-500">
+        Failed to load products. Try again.
+      </div>
+    );
   if (!data || data.length === 0) return <p>No products found</p>;
 
   // 🔥 Paginate

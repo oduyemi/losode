@@ -1,14 +1,22 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SearchOutlined, ShoppingCartOutlined, HeartOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 export default function Header() {
   const [query, setQuery] = useState("");
   const wishlistCount = useSelector((state: RootState) => state.wishlist.items.length);
+  const cartCount = useSelector(
+    (state: RootState) => state.cart.items.reduce((acc, item) => acc + item.quantity, 0)
+  );
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -62,13 +70,20 @@ export default function Header() {
         <Link href="/wishlist" className="relative">
             <HeartOutlined className="cursor-pointer hover:opacity-70" />
 
-            {wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+            {mounted && wishlistCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
                 {wishlistCount}
-                </span>
+            </span>
             )}
         </Link>
-          <ShoppingCartOutlined className="cursor-pointer hover:opacity-70" />
+          <Link href="/cart" className="relative">
+            <ShoppingCartOutlined className="cursor-pointer hover:opacity-70" />
+            {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-white text-black text-xs px-1.5 rounded-full">
+                {cartCount}
+                </span>
+            )}
+            </Link>
         </div>
       </div>
     </header>

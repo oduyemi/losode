@@ -1,27 +1,38 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useProducts } from "@/features/products/hooks";
+import { useProduct } from "@/features/products/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/features/wishlist/wishlist-slice";
 import { RootState } from "@/store";
 import Image from "next/image";
 import { useState } from "react";
-
-
+import { addToCart } from "@/features/cart/cart-slice";
 
 export const ProductDetails = () => {
     const { slug } = useParams();
     const dispatch = useDispatch();
-    const filters = useSelector((state: RootState) => state.products.filters);
-    const { data, isLoading } = useProducts(filters);
-    const product = data?.find((p) => p.slug === slug);
+    // const filters = useSelector((state: RootState) => state.products.filters);
+    const { data: product, isLoading, isError } = useProduct(slug);
     const wishlist = useSelector((state: RootState) => state.wishlist.items);
     const isWishlisted = product ? wishlist.some((item) => item.id === product.id): false;
     const [activeImage, setActiveImage] = useState(0);
     
     
-    if (isLoading) return <p>Loading...</p>;
-    if (!product) return <p>Product not found</p>;
+    if (isLoading) {
+        return <p className="p-6">Loading product...</p>;
+      }
+      
+      if (isError) {
+        return (
+          <p className="p-6 text-red-500">
+            Failed to load product. Please try again.
+          </p>
+        );
+      }
+      
+      if (!product) {
+        return <p className="p-6">Product not found</p>;
+      }
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
@@ -67,9 +78,12 @@ export const ProductDetails = () => {
             </p>
             </div>
 
-            <button className="w-full bg-black text-white py-3 rounded-md">
-            Add to Bag
-            </button>
+            <button
+                onClick={() => dispatch(addToCart(product))}
+                className="w-full bg-black text-white py-3 rounded-md hover:opacity-90 transition"
+                >
+                Add to Cart
+                </button>
 
             <button
                 onClick={() => dispatch(toggleWishlist(product))}
