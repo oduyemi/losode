@@ -3,7 +3,7 @@ import { FilterState } from "./utils";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
-// Build query string from filters
+
 export function buildQueryParams(filters: FilterState) {
   const params = new URLSearchParams();
   if (filters.search) {
@@ -22,12 +22,11 @@ export function buildQueryParams(filters: FilterState) {
   return params.toString();
 }
 
-// Fetch products with filters
+
 export async function fetchProducts(filters?: FilterState) {
   const query = filters ? `?${buildQueryParams(filters)}` : "";
-
   const res = await fetch(`${BASE_URL}/products/${query}`, {
-    next: { revalidate: 60 }, // caching for 60 seconds
+    next: { revalidate: 60 },
   });
 
   if (!res.ok) throw new Error("Failed to fetch products");
@@ -35,7 +34,7 @@ export async function fetchProducts(filters?: FilterState) {
   return res.json();
 }
 
-// Fetch categories
+
 export async function fetchCategories() {
   const res = await fetch(`${BASE_URL}/categories`, {
     next: { revalidate: 3600 },

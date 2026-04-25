@@ -38,7 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.fetchCategories = exports.fetchProducts = exports.buildQueryParams = void 0;
 var BASE_URL = "https://api.escuelajs.co/api/v1";
-// Build query string from filters
 function buildQueryParams(filters) {
     var params = new URLSearchParams();
     if (filters.search) {
@@ -54,7 +53,6 @@ function buildQueryParams(filters) {
     return params.toString();
 }
 exports.buildQueryParams = buildQueryParams;
-// Fetch products with filters
 function fetchProducts(filters) {
     return __awaiter(this, void 0, void 0, function () {
         var query, res;
@@ -75,7 +73,6 @@ function fetchProducts(filters) {
     });
 }
 exports.fetchProducts = fetchProducts;
-// Fetch categories
 function fetchCategories() {
     return __awaiter(this, void 0, void 0, function () {
         var res;
