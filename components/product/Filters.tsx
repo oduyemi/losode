@@ -114,7 +114,7 @@ export default function Filters() {
   );
 
   return (
-    <aside className="w-full md:w-[260px] pr-0 md:pr-4 border-r">
+    <aside className="min-h-screen w-full md:w-[260px] pr-0 md:pr-4 border-r">
       <Collapse
         defaultActiveKey={[]}
         ghost

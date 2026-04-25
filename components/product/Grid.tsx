@@ -3,21 +3,68 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useProducts } from "@/features/products/hooks";
 import { ProductCard } from "./Card";
+import { useState, useEffect } from "react";
+import { Pagination } from "antd";
 
 export const ProductGrid = () => {
   const filters = useSelector((state: RootState) => state.products.filters);
-
   const { data, isLoading, isError } = useProducts(filters);
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8); // default desktop
+
+  // 🔥 Responsive page size (2 rows)
+  useEffect(() => {
+    const updatePageSize = () => {
+      const width = window.innerWidth;
+
+      if (width < 768) {
+        setPageSize(4); // 2 cols × 2 rows
+      } else if (width < 1024) {
+        setPageSize(6); // 3 cols × 2 rows
+      } else {
+        setPageSize(8); // 4 cols × 2 rows
+      }
+    };
+
+    updatePageSize();
+    window.addEventListener("resize", updatePageSize);
+    return () => window.removeEventListener("resize", updatePageSize);
+  }, []);
+
+  // 🔁 Reset page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
 
   if (isLoading) return <p>Loading products...</p>;
   if (isError) return <p>Failed to load products</p>;
   if (!data || data.length === 0) return <p>No products found</p>;
 
+  // 🔥 Paginate
+  const start = (page - 1) * pageSize;
+  const paginatedData = data.slice(start, start + pageSize);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {data.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+    <div className="space-y-8">
+      
+      {/* GRID (MAX 2 ROWS) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {paginatedData.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+
+      {/* PAGINATION */}
+      <div className="flex justify-center">
+        <Pagination
+          current={page}
+          pageSize={pageSize}
+          total={data.length}
+          onChange={(p) => setPage(p)}
+          showSizeChanger={false}
+        />
+      </div>
     </div>
   );
 };

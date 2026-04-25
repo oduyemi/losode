@@ -78,7 +78,7 @@ function Filters() {
                     : __spreadArrays(selected, [item]);
                 dispatch(setAction(next));
             } }, item)); }))); };
-    return (React.createElement("aside", { className: "w-full md:w-[260px] pr-0 md:pr-4 border-r" },
+    return (React.createElement("aside", { className: "min-h-screen w-full md:w-[260px] pr-0 md:pr-4 border-r" },
         React.createElement(antd_1.Collapse, { defaultActiveKey: [], ghost: true, expandIconPosition: "end", expandIcon: function (_a) {
                 var isActive = _a.isActive;
                 return isActive ? (React.createElement(icons_1.MinusOutlined, { className: "text-xs" })) : (React.createElement(icons_1.PlusOutlined, { className: "text-xs" }));
