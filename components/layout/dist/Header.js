@@ -6,14 +6,24 @@ var link_1 = require("next/link");
 var icons_1 = require("@ant-design/icons");
 var image_1 = require("next/image");
 var react_redux_1 = require("react-redux");
+var product_slice_1 = require("@/features/products/product-slice");
 function Header() {
+    var dispatch = react_redux_1.useDispatch();
     var _a = react_1.useState(""), query = _a[0], setQuery = _a[1];
     var wishlistCount = react_redux_1.useSelector(function (state) { return state.wishlist.items.length; });
     var cartCount = react_redux_1.useSelector(function (state) { return state.cart.items.reduce(function (acc, item) { return acc + item.quantity; }, 0); });
     var _b = react_1.useState(false), mounted = _b[0], setMounted = _b[1];
+    var filters = react_redux_1.useSelector(function (state) { return state.products.filters; });
+    var _c = react_1.useState(filters.search || ""), searchInput = _c[0], setSearchInput = _c[1];
     react_1.useEffect(function () {
         setMounted(true);
     }, []);
+    react_1.useEffect(function () {
+        var delay = setTimeout(function () {
+            dispatch(product_slice_1.setSearch(searchInput));
+        }, 400);
+        return function () { return clearTimeout(delay); };
+    }, [searchInput, dispatch]);
     var handleSearch = function () {
         if (!query.trim())
             return;
@@ -26,7 +36,7 @@ function Header() {
                 React.createElement(image_1["default"], { src: "/images/logo.png", alt: "Sitelogo", height: 30, width: 60, sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw", className: "h-6" })),
             React.createElement("div", { className: "hidden md:flex flex-1 max-w-md" },
                 React.createElement("div", { className: "flex w-full bg-white rounded-md overflow-hidden" },
-                    React.createElement("input", { type: "text", placeholder: "Search products...", value: query, onChange: function (e) { return setQuery(e.target.value); }, className: "flex-1 px-3 py-1.5 text-black outline-none text-sm" }),
+                    React.createElement("input", { type: "text", placeholder: "Search products...", value: searchInput, onChange: function (e) { return setSearchInput(e.target.value); }, allowClear: true, className: "flex-1 px-3 py-1.5 text-black outline-none text-sm" }),
                     React.createElement("button", { onClick: handleSearch, className: "px-3 text-black hover:bg-gray-100" },
                         React.createElement(icons_1.SearchOutlined, null)))),
             React.createElement("nav", { className: "hidden md:flex gap-6 text-sm" },
