@@ -1,15 +1,14 @@
 "use client";
 import Link from "next/link";
-import {
-  SearchOutlined,
-  ShoppingCartOutlined,
-  HeartOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, ShoppingCartOutlined, HeartOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function Header() {
   const [query, setQuery] = useState("");
+  const wishlistCount = useSelector((state: RootState) => state.wishlist.items.length);
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -28,6 +27,7 @@ export default function Header() {
             alt="Sitelogo"
             height={30}
             width={60}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             className="h-6"
           />
         </Link>
@@ -59,7 +59,15 @@ export default function Header() {
 
         {/* ICONS */}
         <div className="flex items-center gap-5 text-lg">
-          <HeartOutlined className="cursor-pointer hover:opacity-70" />
+        <Link href="/wishlist" className="relative">
+            <HeartOutlined className="cursor-pointer hover:opacity-70" />
+
+            {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                {wishlistCount}
+                </span>
+            )}
+        </Link>
           <ShoppingCartOutlined className="cursor-pointer hover:opacity-70" />
         </div>
       </div>
