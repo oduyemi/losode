@@ -9,7 +9,7 @@ export function useProducts(filters: FilterState) {
   const sort = useSelector((state: RootState) => state.products.sort);
 
   return useQuery({
-    queryKey: ["products", filters],
+    queryKey: ["products", filters, sort],
     queryFn: async () => {
       const data = await fetchProducts(filters);
       const transformed = (data || []).map(transformProduct);

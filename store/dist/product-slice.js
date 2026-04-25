@@ -25,6 +25,9 @@ var productSlice = toolkit_1.createSlice({
         setProducts: function (state, action) {
             state.products = action.payload;
         },
+        setSearch: function (state, action) {
+            state.filters.search = action.payload;
+        },
         // FILTERS 
         setCategory: function (state, action) {
             state.filters.category = action.payload;

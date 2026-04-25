@@ -18,6 +18,13 @@ export function filterProducts(
   filters: FilterState
 ): Product[] {
   return products.filter((product) => {
+    let filtered = [...products];
+    if (filters.search) {
+      filtered = filtered.filter((p) =>
+        p.title.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+  
     if (
       filters.category.length &&
       !filters.category.includes(product.category.name)

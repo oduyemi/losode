@@ -46,6 +46,10 @@ const productSlice = createSlice({
       state.products = action.payload;
     },
 
+    setSearch: (state, action) => {
+      state.filters.search = action.payload;
+    },
+
     // FILTERS 
     setCategory: (state, action: PayloadAction<string[]>) => {
       state.filters.category = action.payload;
