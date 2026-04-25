@@ -2,7 +2,7 @@
 import { useProducts } from "@/features/products/hooks";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
-import { setProducts } from "@/store/product-slice";
+import { setProducts } from "@/features/products/product-slice";
 import { useEffect } from "react";
 import { ProductGrid } from "@/components/product/Grid";
 import Layout from "@/components/layout/index";

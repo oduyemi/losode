@@ -16,6 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useCategories } from "@/features/products/hooks";
+import { ApiCategory } from "@/features/products/types";
 
 const { Panel } = Collapse;
 
@@ -35,14 +36,17 @@ export default function Filters() {
   }, [searchInput, dispatch]);
 
   const categories =
-    categoriesData?.map((cat: any) => ({
+    categoriesData?.map((cat: ApiCategory) => ({
       label: cat.name,
       value: cat.slug,
     })) || [];
 
-  const handlePriceChange = (value: [number, number]) => {
-    setPrice(value);
-    dispatch(setPriceRange(value));
+  const handlePriceChange = (value: number | number[]) => {
+    if (Array.isArray(value) && value.length === 2) {
+      const range: [number, number] = [value[0], value[1]];
+      setPrice(range);
+      dispatch(setPriceRange(range));
+    }
   };
 
   return (
