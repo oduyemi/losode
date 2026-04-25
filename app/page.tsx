@@ -1,37 +1,29 @@
 "use client";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useProducts } from "@/features/products/hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
 import { setProducts } from "@/store/product-slice";
+import { useEffect } from "react";
 import { ProductGrid } from "@/components/product/Grid";
 import Layout from "@/components/layout/index";
 
-const dummyProducts = [
-  {
-    id: "1",
-    name: "Blazer Set",
-    price: 80000,
-    image: "/p1.jpg",
-    category: "Co-Ords",
-  },
-  {
-    id: "2",
-    name: "Corset Dress",
-    price: 120000,
-    image: "/p2.jpg",
-    category: "Dresses",
-  },
-];
 
-export default function ProductsPage() {
+export default function HomePage() {
   const dispatch = useDispatch();
+  const { filters } = useSelector((state: RootState) => state.products);
+
+  const { data, isLoading } = useProducts(filters);
 
   useEffect(() => {
-    dispatch(setProducts(dummyProducts));
-  }, []);
+    if (data) {
+      dispatch(setProducts(data));
+    }
+  }, [data, dispatch]);
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
-    <Layout>
-      <ProductGrid />
-    </Layout>
-  );
+  <Layout>
+    <ProductGrid />
+  </Layout>);
 }

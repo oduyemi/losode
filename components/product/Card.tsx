@@ -20,22 +20,21 @@ export const ProductCard = ({ product }: { product: Product }) => {
       className="group"
     >
       <Card className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300">
-        {/* Image */}
         <div className="relative w-full h-[320px] bg-gray-100">
           <Image
             src={product.image}
             alt={product.name}
             fill
+            sizes="auto"
+            loading="eager"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          {/* Wishlist */}
           <button className="absolute top-3 right-3 bg-white/80 backdrop-blur p-2 rounded-full shadow hover:scale-110 transition">
             <Heart size={18} className="text-gray-700" />
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-4 space-y-1">
           <p className="text-xs tracking-wide text-gray-400 uppercase">
             {product.brand || "DRESS BELLA"}
