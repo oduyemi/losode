@@ -75,18 +75,6 @@ export function processProducts(
 }
 
 
-const mockSizes = ["UK 8-M", "UK 10-M", "UK 12-L", "UK 14-XL"];
-const mockColors = ["Black", "Blue", "Red", "White", "Green"];
-const mockFits = ["Loose Fit", "Regular Fit", "Tight Fit"];
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
-}
-
 
 function generateSlug(title: string, id: number) {
   return `${title}`
@@ -99,7 +87,7 @@ export function transformProduct(api: ApiProduct): Product {
   return {
     id: api.id,
     title: api.title || "Untitled",
-    slug: generateSlug(api.title, api.id), // ✅ FIX
+    slug: generateSlug(api.title, api.id), 
     price: api.price || 0,
     description: api.description || "",
     images: api.images || [],

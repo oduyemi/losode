@@ -51,16 +51,6 @@ function processProducts(products, filters, sort) {
     return sortProducts(filtered, sort);
 }
 exports.processProducts = processProducts;
-var mockSizes = ["UK 8-M", "UK 10-M", "UK 12-L", "UK 14-XL"];
-var mockColors = ["Black", "Blue", "Red", "White", "Green"];
-var mockFits = ["Loose Fit", "Regular Fit", "Tight Fit"];
-function slugify(text) {
-    return text
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "");
-}
 function generateSlug(title, id) {
     return ("" + title)
         .toLowerCase()

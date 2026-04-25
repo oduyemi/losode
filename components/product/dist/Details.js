@@ -8,20 +8,25 @@ var react_redux_1 = require("react-redux");
 var wishlist_slice_1 = require("@/features/wishlist/wishlist-slice");
 var image_1 = require("next/image");
 var react_1 = require("react");
+var cart_slice_1 = require("@/features/cart/cart-slice");
 exports.ProductDetails = function () {
     var _a;
     var slug = navigation_1.useParams().slug;
     var dispatch = react_redux_1.useDispatch();
-    var filters = react_redux_1.useSelector(function (state) { return state.products.filters; });
-    var _b = hooks_1.useProducts(filters), data = _b.data, isLoading = _b.isLoading;
-    var product = data === null || data === void 0 ? void 0 : data.find(function (p) { return p.slug === slug; });
+    // const filters = useSelector((state: RootState) => state.products.filters);
+    var _b = hooks_1.useProduct(slug), product = _b.data, isLoading = _b.isLoading, isError = _b.isError;
     var wishlist = react_redux_1.useSelector(function (state) { return state.wishlist.items; });
     var isWishlisted = product ? wishlist.some(function (item) { return item.id === product.id; }) : false;
     var _c = react_1.useState(0), activeImage = _c[0], setActiveImage = _c[1];
-    if (isLoading)
-        return React.createElement("p", null, "Loading...");
-    if (!product)
-        return React.createElement("p", null, "Product not found");
+    if (isLoading) {
+        return React.createElement("p", { className: "p-6" }, "Loading product...");
+    }
+    if (isError) {
+        return (React.createElement("p", { className: "p-6 text-red-500" }, "Failed to load product. Please try again."));
+    }
+    if (!product) {
+        return React.createElement("p", { className: "p-6" }, "Product not found");
+    }
     return (React.createElement("div", { className: "max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10" },
         React.createElement("div", { className: "flex gap-4" },
             React.createElement("div", { className: "flex flex-col gap-3" }, product.images.map(function (img, index) { return (React.createElement("div", { key: index, onClick: function () { return setActiveImage(index); }, className: "w-20 h-20 relative cursor-pointer border " + (activeImage === index ? "border-black" : "border-gray-200") },
@@ -34,7 +39,7 @@ exports.ProductDetails = function () {
                 React.createElement("p", { className: "text-xl font-bold mt-2" },
                     "\u20A6",
                     product.price.toLocaleString())),
-            React.createElement("button", { className: "w-full bg-black text-white py-3 rounded-md" }, "Add to Bag"),
+            React.createElement("button", { onClick: function () { return dispatch(cart_slice_1.addToCart(product)); }, className: "w-full bg-black text-white py-3 rounded-md hover:opacity-90 transition" }, "Add to Cart"),
             React.createElement("button", { onClick: function () { return dispatch(wishlist_slice_1.toggleWishlist(product)); }, className: "w-full py-3 rounded-md border " + (isWishlisted ? "bg-black text-white" : "") }, isWishlisted ? "Saved ✓" : "Save Item"),
             React.createElement("div", { className: "border-t pt-6 space-y-4 text-sm text-gray-600" },
                 React.createElement("div", null,

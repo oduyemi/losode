@@ -1,14 +1,19 @@
 "use client";
 "use strict";
 exports.__esModule = true;
+var react_1 = require("react");
 var link_1 = require("next/link");
 var icons_1 = require("@ant-design/icons");
 var image_1 = require("next/image");
-var react_1 = require("react");
 var react_redux_1 = require("react-redux");
 function Header() {
     var _a = react_1.useState(""), query = _a[0], setQuery = _a[1];
     var wishlistCount = react_redux_1.useSelector(function (state) { return state.wishlist.items.length; });
+    var cartCount = react_redux_1.useSelector(function (state) { return state.cart.items.reduce(function (acc, item) { return acc + item.quantity; }, 0); });
+    var _b = react_1.useState(false), mounted = _b[0], setMounted = _b[1];
+    react_1.useEffect(function () {
+        setMounted(true);
+    }, []);
     var handleSearch = function () {
         if (!query.trim())
             return;
@@ -30,7 +35,9 @@ function Header() {
             React.createElement("div", { className: "flex items-center gap-5 text-lg" },
                 React.createElement(link_1["default"], { href: "/wishlist", className: "relative" },
                     React.createElement(icons_1.HeartOutlined, { className: "cursor-pointer hover:opacity-70" }),
-                    wishlistCount > 0 && (React.createElement("span", { className: "absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full" }, wishlistCount))),
-                React.createElement(icons_1.ShoppingCartOutlined, { className: "cursor-pointer hover:opacity-70" })))));
+                    mounted && wishlistCount > 0 && (React.createElement("span", { className: "absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full" }, wishlistCount))),
+                React.createElement(link_1["default"], { href: "/cart", className: "relative" },
+                    React.createElement(icons_1.ShoppingCartOutlined, { className: "cursor-pointer hover:opacity-70" }),
+                    cartCount > 0 && (React.createElement("span", { className: "absolute -top-2 -right-2 bg-white text-black text-xs px-1.5 rounded-full" }, cartCount)))))));
 }
 exports["default"] = Header;

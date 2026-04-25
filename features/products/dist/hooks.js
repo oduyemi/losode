@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.useCategories = exports.useProducts = void 0;
+exports.useCategories = exports.useProduct = exports.useProducts = void 0;
 var react_query_1 = require("@tanstack/react-query");
 var api_1 = require("./api");
 var utils_1 = require("./utils");
@@ -62,6 +62,32 @@ function useProducts(filters) {
     });
 }
 exports.useProducts = useProducts;
+function useProduct(slug) {
+    var _this = this;
+    return react_query_1.useQuery({
+        queryKey: ["product", slug],
+        enabled: !!slug,
+        queryFn: function () { return __awaiter(_this, void 0, void 0, function () {
+            var res, data, transformed, product;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch(api_1.BASE_URL + "/products")];
+                    case 1:
+                        res = _a.sent();
+                        return [4 /*yield*/, res.json()];
+                    case 2:
+                        data = _a.sent();
+                        transformed = data.map(utils_1.transformProduct);
+                        product = transformed.find(function (p) { return p.slug === slug; });
+                        if (!product)
+                            throw new Error("Product not found");
+                        return [2 /*return*/, product];
+                }
+            });
+        }); }
+    });
+}
+exports.useProduct = useProduct;
 function useCategories() {
     return react_query_1.useQuery({
         queryKey: ["categories"],
