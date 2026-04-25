@@ -11,6 +11,12 @@ exports.transformProduct = exports.processProducts = exports.sortProducts = expo
 function filterProducts(products, filters) {
     return products.filter(function (product) {
         var _a;
+        var filtered = __spreadArrays(products);
+        if (filters.search) {
+            filtered = filtered.filter(function (p) {
+                return p.title.toLowerCase().includes(filters.search.toLowerCase());
+            });
+        }
         if (filters.category.length &&
             !filters.category.includes(product.category.name)) {
             return false;

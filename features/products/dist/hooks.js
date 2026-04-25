@@ -45,7 +45,7 @@ function useProducts(filters) {
     var _this = this;
     var sort = react_redux_1.useSelector(function (state) { return state.products.sort; });
     return react_query_1.useQuery({
-        queryKey: ["products", filters],
+        queryKey: ["products", filters, sort],
         queryFn: function () { return __awaiter(_this, void 0, void 0, function () {
             var data, transformed, filtered;
             return __generator(this, function (_a) {

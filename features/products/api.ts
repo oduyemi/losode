@@ -1,8 +1,6 @@
 import { FilterState } from "./utils";
 
-
 export const BASE_URL = "https://api.escuelajs.co/api/v1";
-
 
 export function buildQueryParams(filters: FilterState) {
   const params = new URLSearchParams();
