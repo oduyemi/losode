@@ -1,5 +1,5 @@
 import { Product } from "@/types/product";
-
+import { ApiProduct } from "./types";
 
 
 export interface FilterState {
@@ -120,4 +120,38 @@ export function processProducts(
 ) {
   const filtered = filterProducts(products, filters);
   return sortProducts(filtered, sort);
+}
+
+
+const mockSizes = ["UK 8-M", "UK 10-M", "UK 12-L", "UK 14-XL"];
+const mockColors = ["Black", "Blue", "Red", "White", "Green"];
+const mockFits = ["Loose Fit", "Regular Fit", "Tight Fit"];
+
+function isValidImage(url?: string) {
+  if (!url) return false;
+
+  // block localhost / invalid
+  if (url.includes("127.0.0.1") || url.includes("localhost")) {
+    return false;
+  }
+
+  return url.startsWith("http");
+}
+
+export function transformProduct(api: ApiProduct): Product {
+  return {
+    id: String(api.id),
+    name: api.title || "Untitled",
+    price: api.price || 0,
+    image: isValidImage(api.images?.[0])
+      ? api.images[0]
+      : "/placeholder.png",
+    category: api.category?.name || "",
+    brand: "Platzi Store",
+    size: [],
+    color: [],
+    fit: "",
+    occasion: "",
+    returns: "",
+  };
 }

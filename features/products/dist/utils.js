@@ -7,7 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 exports.__esModule = true;
-exports.processProducts = exports.sortProducts = exports.filterProducts = void 0;
+exports.transformProduct = exports.processProducts = exports.sortProducts = exports.filterProducts = void 0;
 function filterProducts(products, filters) {
     return products.filter(function (product) {
         var _a;
@@ -84,3 +84,34 @@ function processProducts(products, filters, sort) {
     return sortProducts(filtered, sort);
 }
 exports.processProducts = processProducts;
+var mockSizes = ["UK 8-M", "UK 10-M", "UK 12-L", "UK 14-XL"];
+var mockColors = ["Black", "Blue", "Red", "White", "Green"];
+var mockFits = ["Loose Fit", "Regular Fit", "Tight Fit"];
+function isValidImage(url) {
+    if (!url)
+        return false;
+    // block localhost / invalid
+    if (url.includes("127.0.0.1") || url.includes("localhost")) {
+        return false;
+    }
+    return url.startsWith("http");
+}
+function transformProduct(api) {
+    var _a, _b;
+    return {
+        id: String(api.id),
+        name: api.title || "Untitled",
+        price: api.price || 0,
+        image: isValidImage((_a = api.images) === null || _a === void 0 ? void 0 : _a[0])
+            ? api.images[0]
+            : "/placeholder.png",
+        category: ((_b = api.category) === null || _b === void 0 ? void 0 : _b.name) || "",
+        brand: "Platzi Store",
+        size: [],
+        color: [],
+        fit: "",
+        occasion: "",
+        returns: ""
+    };
+}
+exports.transformProduct = transformProduct;

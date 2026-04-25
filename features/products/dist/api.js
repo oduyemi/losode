@@ -36,36 +36,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.useCategories = exports.useProducts = void 0;
-var react_query_1 = require("@tanstack/react-query");
-var api_1 = require("./api");
-var utils_1 = require("./utils");
-var react_redux_1 = require("react-redux");
-function useProducts(filters) {
-    var _this = this;
-    var sort = react_redux_1.useSelector(function (state) { return state.products.sort; });
-    return react_query_1.useQuery({
-        queryKey: ["products", filters],
-        queryFn: function () { return __awaiter(_this, void 0, void 0, function () {
-            var data, transformed, filtered;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, api_1.fetchProducts(filters)];
-                    case 1:
-                        data = _a.sent();
-                        transformed = (data || []).map(utils_1.transformProduct);
-                        filtered = utils_1.filterProducts(transformed, filters);
-                        return [2 /*return*/, utils_1.sortProducts(filtered, sort || "")];
-                }
-            });
-        }); }
+exports.fetchCategories = exports.fetchProducts = exports.buildQueryParams = void 0;
+var BASE_URL = "https://api.escuelajs.co/api/v1";
+// Build query string from filters
+function buildQueryParams(filters) {
+    var params = new URLSearchParams();
+    if (filters.search) {
+        params.append("title", filters.search);
+    }
+    if (filters.priceRange) {
+        params.append("price_min", String(filters.priceRange[0]));
+        params.append("price_max", String(filters.priceRange[1]));
+    }
+    if (filters.category.length === 1) {
+        params.append("categorySlug", filters.category[0].toLowerCase());
+    }
+    return params.toString();
+}
+exports.buildQueryParams = buildQueryParams;
+// Fetch products with filters
+function fetchProducts(filters) {
+    return __awaiter(this, void 0, void 0, function () {
+        var query, res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    query = filters ? "?" + buildQueryParams(filters) : "";
+                    return [4 /*yield*/, fetch(BASE_URL + "/products/" + query, {
+                            next: { revalidate: 60 }
+                        })];
+                case 1:
+                    res = _a.sent();
+                    if (!res.ok)
+                        throw new Error("Failed to fetch products");
+                    return [2 /*return*/, res.json()];
+            }
+        });
     });
 }
-exports.useProducts = useProducts;
-function useCategories() {
-    return react_query_1.useQuery({
-        queryKey: ["categories"],
-        queryFn: api_1.fetchCategories
+exports.fetchProducts = fetchProducts;
+// Fetch categories
+function fetchCategories() {
+    return __awaiter(this, void 0, void 0, function () {
+        var res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch(BASE_URL + "/categories", {
+                        next: { revalidate: 3600 }
+                    })];
+                case 1:
+                    res = _a.sent();
+                    if (!res.ok)
+                        throw new Error("Failed to fetch categories");
+                    return [2 /*return*/, res.json()];
+            }
+        });
     });
 }
-exports.useCategories = useCategories;
+exports.fetchCategories = fetchCategories;
