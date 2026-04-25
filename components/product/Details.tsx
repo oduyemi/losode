@@ -9,9 +9,9 @@ import { useState } from "react";
 import { addToCart } from "@/features/cart/cart-slice";
 
 export const ProductDetails = () => {
-    const { slug } = useParams();
+    const params = useParams();
+    const slug = typeof params.slug === "string" ? params.slug: params.slug?.[0]; 
     const dispatch = useDispatch();
-    // const filters = useSelector((state: RootState) => state.products.filters);
     const { data: product, isLoading, isError } = useProduct(slug);
     const wishlist = useSelector((state: RootState) => state.wishlist.items);
     const isWishlisted = product ? wishlist.some((item) => item.id === product.id): false;

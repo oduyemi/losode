@@ -2,31 +2,57 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FilterState } from "./utils";
 import { Product } from "@/types/product";
 
-interface ProductsState {
+// interface ProductsState {
+//   products: Product[];
+//   filters: FilterState;
+//   sort?: string;
+// }
+
+interface ProductState {
   products: Product[];
-  filters: FilterState;
-  sort?: string;
+  filters: Filters;
+  sort: string;
 }
 
-const initialState: ProductsState = {
-    products: [],
-    filters: {
-      category: [],
-      size: [],
-      occasion: [],
-      fit: [],
-      returns: [],
-      color: [],
-      priceRange: [0, 200000],
-      search: "",
-    },
-    sort: "",
+
+const initialState: ProductState = {
+  products: [],
+  filters: {
+    category: [],
+    size: [],
+    occasion: [],
+    fit: [],
+    returns: [],
+    color: [],
+    priceRange: [0, 200000],
+    search: "",
+  },
+  sort: "",
 };
+
+interface Filters {
+  category: string[];
+  size: string[];
+  occasion: string[];
+  fit: string[];
+  returns: string[];
+  color: string[];
+  priceRange: [number, number];
+  search: string;
+}
+
 
 const productsSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
+      setProducts: (state, action: PayloadAction<Product[]>) => {
+        state.products = action.payload;
+      },
+  
+      setSearch: (state, action) => {
+        state.filters.search = action.payload;
+      },
       // ---------------- FILTERS ----------------
       setCategory(state, action: PayloadAction<string[]>) {
         state.filters.category = action.payload;
@@ -56,10 +82,6 @@ const productsSlice = createSlice({
         state.filters.priceRange = action.payload;
       },
   
-      setSearch(state, action: PayloadAction<string>) {
-        state.filters.search = action.payload;
-      },
-  
       setSort(state, action: PayloadAction<string>) {
         state.sort = action.payload;
       },
@@ -71,6 +93,8 @@ const productsSlice = createSlice({
 });
 
 export const {
+    setProducts,
+    setSearch,
     setCategory,
     setSize,
     setOccasion,
@@ -78,7 +102,6 @@ export const {
     setReturns,
     setColor,
     setPriceRange,
-    setSearch,
     setSort,
     clearFilters,
 } = productsSlice.actions;

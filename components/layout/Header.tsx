@@ -32,7 +32,6 @@ export default function Header() {
     const handleSearch = () => {
         if (!query.trim()) return;
         console.log("Search:", query);
-        // later → router.push(`/search?q=${query}`)
     };
 
     return (
@@ -59,7 +58,6 @@ export default function Header() {
                 placeholder="Search products..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                allowClear
                 className="flex-1 px-3 py-1.5 text-black outline-none text-sm"
                 />
                 <button
