@@ -57,6 +57,18 @@ export function sortProducts(products: Product[], sort: string) {
 }
 
 export function transformProduct(p: any): Product {
+  const isBadImage = (url: string) => {
+    return (
+      !url ||
+      url.includes("gstatic") ||          
+      url.includes("googleusercontent") || 
+      url.includes("base64") ||           
+      !url.startsWith("http")                );
+  };
+
+  const safeImages =
+    p.images?.filter((img: string) => !isBadImage(img)) || [];
+
   return {
     id: p.id,
     title: p.title,
@@ -65,7 +77,10 @@ export function transformProduct(p: any): Product {
       p.title.toLowerCase().replace(/\s+/g, "-") + `-${p.id}`,
     price: p.price,
     description: p.description,
-    images: p.images,
+    images:
+      safeImages.length > 0
+        ? safeImages
+        : ["/images/placeholder.jpg"], 
     brand: p.brand,
     category: {
       id: p.category?.id,

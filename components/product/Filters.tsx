@@ -1,30 +1,16 @@
 "use client";
-import {
-  Collapse,
-  Checkbox,
-  Slider,
-  Input,
-  InputNumber,
-} from "antd";
+import { Checkbox, Slider, Input, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import {
-  setCategory,
-  setPriceRange,
-  setSearch,
-} from "@/features/products/product-slice";
+import { setCategory, setPriceRange, setSearch } from "@/features/products/product-slice";
 import { useState, useEffect } from "react";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useCategories } from "@/features/products/hooks";
 import { ApiCategory } from "@/features/products/types";
-
-const { Panel } = Collapse;
 
 export default function Filters() {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.products.filters);
   const { data: categoriesData, isLoading: catLoading } = useCategories();
-
   const [price, setPrice] = useState<[number, number]>(filters.priceRange);
   const [searchInput, setSearchInput] = useState(filters.search);
 
@@ -32,15 +18,15 @@ export default function Filters() {
     const delay = setTimeout(() => {
       dispatch(setSearch(searchInput));
     }, 400);
-
+    
     return () => clearTimeout(delay);
   }, [searchInput, dispatch]);
 
   const categories =
-  categoriesData?.map((cat: ApiCategory) => ({
-    label: cat.name,
-    value: cat.slug,
-  })) || [];
+    categoriesData?.map((cat: ApiCategory) => ({
+      label: cat.name,
+      value: cat.slug,
+    })) || [];
 
   const handlePriceChange = (value: number | number[]) => {
     if (Array.isArray(value) && value.length === 2) {
@@ -52,11 +38,9 @@ export default function Filters() {
 
   return (
     <aside className="min-h-screen w-full md:w-[260px] pr-0 md:pr-4 border-r">
-      <div className="space-y-6 bg-white p-4 rounded-xl shadow-sm">
-
-        {/* 🔍 SEARCH */}
+      <div className="space-y-8 bg-white p-4 rounded-xl shadow-sm">
         <div>
-          <p className="text-sm font-medium mb-2">Search</p>
+          <p className="text-sm font-semibold mb-3">Search</p>
           <Input
             placeholder="Search products..."
             value={searchInput}
@@ -65,38 +49,24 @@ export default function Filters() {
           />
         </div>
 
-        {/* 🎛 FILTERS */}
-        <Collapse
-          defaultActiveKey={["category", "price"]}
-          ghost
-          expandIconPlacement="end"
-          expandIcon={({ isActive }) =>
-            isActive ? (
-              <MinusOutlined className="text-xs" />
-            ) : (
-              <PlusOutlined className="text-xs" />
-            )
-          }
-        >
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <p className="text-sm font-semibold">Category</p>
 
-          {/* 📂 CATEGORY */}
-          <Panel header="Category" key="category">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs text-gray-400">All</span>
+            {filters.category.length > 0 && (
+              <button
+                onClick={() => dispatch(setCategory([]))}
+                className="text-xs text-gray-400 underline"
+              >
+                Clear
+              </button>
+            )}
+          </div>
 
-              {filters.category.length > 0 && (
-                <button
-                  onClick={() => dispatch(setCategory([]))}
-                  className="text-xs text-gray-400 underline text-left"
-                >
-                  Unselect all
-                </button>
-              )}
-
-              {catLoading && (
-                <p className="text-xs text-gray-400">Loading...</p>
-              )}
-
+          {catLoading ? (
+            <p className="text-xs text-gray-400">Loading...</p>
+          ) : (
+            <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
               {categories.map((item) => (
                 <Checkbox
                   key={item.value}
@@ -113,41 +83,39 @@ export default function Filters() {
                 </Checkbox>
               ))}
             </div>
-          </Panel>
+          )}
+        </div>
 
-          {/* 💰 PRICE */}
-          <Panel header="Price" key="price">
-            <div className="space-y-4">
-              <Slider
-                range
-                min={0}
-                max={200000}
-                value={price}
-                onChange={handlePriceChange}
-              />
+        <div>
+          <p className="text-sm font-semibold mb-3">Price</p>
 
-              <div className="flex gap-2">
-                <InputNumber
-                  min={0}
-                  value={price[0]}
-                  onChange={(val) =>
-                    handlePriceChange([val || 0, price[1]])
-                  }
-                  className="w-full"
-                />
-                <InputNumber
-                  min={0}
-                  value={price[1]}
-                  onChange={(val) =>
-                    handlePriceChange([price[0], val || 0])
-                  }
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </Panel>
+          <Slider
+            range
+            min={0}
+            max={200000}
+            value={price}
+            onChange={handlePriceChange}
+          />
 
-        </Collapse>
+          <div className="flex gap-2 mt-3">
+            <InputNumber
+              min={0}
+              value={price[0]}
+              onChange={(val) =>
+                handlePriceChange([val || 0, price[1]])
+              }
+              className="w-full"
+            />
+            <InputNumber
+              min={0}
+              value={price[1]}
+              onChange={(val) =>
+                handlePriceChange([price[0], val || 0])
+              }
+              className="w-full"
+            />
+          </div>
+        </div>
       </div>
     </aside>
   );
