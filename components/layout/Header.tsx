@@ -37,8 +37,6 @@ export default function Header() {
     return (
         <header className="bg-black text-white sticky top-0 z-50">
         <div className="max-w-[1400px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-6">
-
-            {/* LOGO */}
             <Link href="/" className="flex items-center">
             <Image
                 src="/images/logo.png"
@@ -49,8 +47,6 @@ export default function Header() {
                 className="h-6"
             />
             </Link>
-
-            {/* SEARCH */}
             <div className="hidden md:flex flex-1 max-w-md">
             <div className="flex w-full bg-white rounded-md overflow-hidden">
                 <input
@@ -69,13 +65,10 @@ export default function Header() {
             </div>
             </div>
 
-            {/* NAV */}
             <nav className="hidden md:flex gap-6 text-sm">
             <Link href="/">Shop</Link>
-            <Link href="#">Categories</Link>
+            <Link href="/products/category">Categories</Link>
             </nav>
-
-            {/* ICONS */}
             <div className="flex items-center gap-5 text-lg">
             <Link href="/wishlist" className="relative">
                 <HeartOutlined className="cursor-pointer hover:opacity-70" />
