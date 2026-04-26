@@ -24,8 +24,9 @@ export default function Filters() {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.products.filters);
   const { data: categoriesData, isLoading: catLoading } = useCategories();
-  const [price, setPrice] = useState<[number, number]>([0, 200000]);
-  const [searchInput, setSearchInput] = useState(filters.search || "");
+
+  const [price, setPrice] = useState<[number, number]>(filters.priceRange);
+  const [searchInput, setSearchInput] = useState(filters.search);
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -36,10 +37,10 @@ export default function Filters() {
   }, [searchInput, dispatch]);
 
   const categories =
-    categoriesData?.map((cat: ApiCategory) => ({
-      label: cat.name,
-      value: cat.slug,
-    })) || [];
+  categoriesData?.map((cat: ApiCategory) => ({
+    label: cat.name,
+    value: cat.slug,
+  })) || [];
 
   const handlePriceChange = (value: number | number[]) => {
     if (Array.isArray(value) && value.length === 2) {

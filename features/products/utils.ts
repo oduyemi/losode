@@ -1,5 +1,4 @@
 import { Product } from "@/types/product";
-import { ApiProduct } from "./types";
 
 
 export interface FilterState {
@@ -18,89 +17,63 @@ export function filterProducts(
   filters: FilterState
 ): Product[] {
   return products.filter((product) => {
-    let filtered = [...products];
-    if (filters.search) {
-      filtered = filtered.filter((p) =>
-        p.title.toLowerCase().includes(filters.search.toLowerCase())
-      );
-    }
-  
-    if (
-      filters.category.length &&
-      !filters.category.includes(product.category.name)
-    ) {
-      return false;
-    }
-
-    if (filters.priceRange) {
-      const [min, max] = filters.priceRange;
-      if (product.price < min || product.price > max) return false;
-    }
 
     if (filters.search) {
       const search = filters.search.toLowerCase();
-
       const matches =
-        product.title.toLowerCase().includes(search) ||
-        product.category.name.toLowerCase().includes(search) ||
-        product.brand?.toLowerCase().includes(search);
+        product.title?.toLowerCase().includes(search) ||
+        product.category?.name?.toLowerCase().includes(search);
 
       if (!matches) return false;
+    }
+
+    if (filters.category.length > 0) {
+      if (!filters.category.includes(product.category?.slug)) {
+        return false;
+      }
+    }
+
+    const [min, max] = filters.priceRange;
+    if (product.price < min || product.price > max) {
+      return false;
     }
 
     return true;
   });
 }
 
-
 export function sortProducts(products: Product[], sort: string) {
   if (!sort) return products;
-
   switch (sort) {
     case "price-high":
       return [...products].sort((a, b) => b.price - a.price);
-
     case "price-low":
       return [...products].sort((a, b) => a.price - b.price);
-
     case "newest":
       return [...products].reverse();
-
     default:
       return products;
   }
 }
 
-
-export function processProducts(
-  products: Product[],
-  filters: FilterState,
-  sort: string
-) {
-  const filtered = filterProducts(products, filters);
-  return sortProducts(filtered, sort);
-}
-
-
-
-function generateSlug(title: string, id: number) {
-  return `${title}`
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, "")
-    .replace(/\s+/g, "-") + `-${id}`;
-}
-
-export function transformProduct(api: ApiProduct): Product {
+export function transformProduct(p: any): Product {
   return {
-    id: api.id,
-    title: api.title || "Untitled",
-    slug: generateSlug(api.title, api.id), 
-    price: api.price || 0,
-    description: api.description || "",
-    images: api.images || [],
-    category: api.category,
-
-    creationAt: "",
-    updatedAt: "",
+    id: p.id,
+    title: p.title,
+    slug:
+      p.slug ||
+      p.title.toLowerCase().replace(/\s+/g, "-") + `-${p.id}`,
+    price: p.price,
+    description: p.description,
+    images: p.images,
+    brand: p.brand,
+    category: {
+      id: p.category?.id,
+      name: p.category?.name,
+      slug: p.category?.slug,
+      image: p.category?.image,
+    },
+    creationAt: p.creationAt,
+    updatedAt: p.updatedAt,
   };
 }
