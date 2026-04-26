@@ -9,11 +9,10 @@ import { ApiCategory } from "./types";
 
 export function useProducts(filters: FilterState) {
   const sort = useSelector((state: RootState) => state.products.sort);
-
   return useQuery({
-    queryKey: ["products", filters, sort],
+    queryKey: ["products", filters, sort],  
     queryFn: async () => {
-      const data = await fetchProducts(filters);
+      const data = await fetchProducts();
       const transformed = (data || []).map(transformProduct);
       const filtered = filterProducts(transformed, filters);
       return sortProducts(filtered, sort || "");
