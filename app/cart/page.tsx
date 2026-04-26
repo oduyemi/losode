@@ -6,7 +6,7 @@ import {
   updateQuantity,
 } from "@/features/cart/cart-slice";
 import Image from "next/image";
-
+import Link from "next/link";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -98,9 +98,14 @@ export default function CartPage() {
           Total: ₦{total.toLocaleString()}
         </p>
 
-        <button className="mt-4 bg-black text-white px-6 py-3 rounded-md">
-          Checkout
-        </button>
+        <Link href="/checkout">
+          <button
+            className="w-full bg-black text-white py-3 rounded-lg mt-4 hover:opacity-90"
+            disabled={items.length === 0}
+          >
+            Proceed to Checkout
+          </button>
+        </Link>
       </div>
     </div>
   );
