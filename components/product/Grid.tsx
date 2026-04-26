@@ -5,9 +5,11 @@ import { useProducts } from "@/features/products/hooks";
 import { ProductCard } from "./Card";
 import { useState, useEffect } from "react";
 import { Pagination } from "antd";
+import { filterProducts, sortProducts } from "@/features/products/utils";
 
 export const ProductGrid = () => {
   const filters = useSelector((state: RootState) => state.products.filters);
+  const sort = useSelector((state: RootState) => state.products.sort);
   const { data, isLoading, isError } = useProducts(filters);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
@@ -17,11 +19,11 @@ export const ProductGrid = () => {
       const width = window.innerWidth;
 
       if (width < 768) {
-        setPageSize(4); // 2 cols × 2 rows
+        setPageSize(4); // mobile
       } else if (width < 1024) {
-        setPageSize(6); // 3 cols × 2 rows
+        setPageSize(6); // tablet
       } else {
-        setPageSize(8); // 4 cols × 2 rows
+        setPageSize(8); // desktop
       }
     };
 
@@ -32,32 +34,41 @@ export const ProductGrid = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [filters]);
+  }, [filters, sort]);
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="h-[350px] bg-gray-100 animate-pulse rounded-xl" />
+          <div
+            key={i}
+            className="h-[350px] bg-gray-100 animate-pulse rounded-xl"
+          />
         ))}
       </div>
     );
+  }
 
-  if (isError)
+  if (isError) {
     return (
       <div className="text-center py-10 text-gray-500">
         Failed to load products. Try again.
       </div>
     );
-  if (!data || data.length === 0) return <p>No products found</p>;
+  }
 
-  // 🔥 Paginate
+  if (!data || data.length === 0) {
+    return <p className="text-center py-10">No products found</p>;
+  }
+
+  const filtered = filterProducts(data, filters);
+  const sorted = sortProducts(filtered, sort);
   const start = (page - 1) * pageSize;
-  const paginatedData = data.slice(start, start + pageSize);
+  const paginatedData = sorted.slice(start, start + pageSize);
 
   return (
     <div className="space-y-8">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedData.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
@@ -68,7 +79,7 @@ export const ProductGrid = () => {
         <Pagination
           current={page}
           pageSize={pageSize}
-          total={data.length}
+          total={sorted.length} 
           onChange={(p) => setPage(p)}
           showSizeChanger={false}
         />
