@@ -207,13 +207,6 @@ This ensures users can continue where they left off.
 
 This project uses Paystack in test mode.
 
-Use the following test card details:
-
-* **Card Number:** 4084 0840 8408 4081
-* **Expiry Date:** Any future date
-* **CVV:** Any 3 digits
-* **OTP:** 123456
-
 ---
 
 ## Installation and Setup
