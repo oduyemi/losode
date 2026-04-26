@@ -15,7 +15,6 @@ export const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const isWishlisted = wishlist.some((item) => item.id === product.id);
-
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = (e: any) => {
@@ -36,11 +35,10 @@ export const ProductCard = ({ product }: { product: Product }) => {
         <Card className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300 bg-white">
           <div className="relative w-full h-[320px] bg-gray-100 overflow-hidden">
             <Image
-              src={product.images?.[0] || "/placeholder.png"}
+              src={product.images?.[0] || "/images/placeholder.jpg"}
               alt={product.title}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
             <motion.button

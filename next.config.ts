@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "placeimg.com" },
       { protocol: "https", hostname: "pravatar.cc" },
       { protocol: "https", hostname: "sanbercode.com" },
-      { protocol: "http", hostname: "127.0.0.1" }, // local dev API images
+      { protocol: "http", hostname: "127.0.0.1" },
+      { protocol: "https", hostname: "encrypted-tbn0.gstatic.com" },
     ],
   },
 };

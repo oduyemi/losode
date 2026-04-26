@@ -81,10 +81,10 @@ export default function Header() {
             </Link>
             <Link href="/cart" className="relative">
                 <ShoppingCartOutlined className="cursor-pointer hover:opacity-70" />
-                {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-white text-black text-xs px-1.5 rounded-full">
+                {mounted && cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-white text-black text-xs px-1.5 rounded-full">
                     {cartCount}
-                    </span>
+                </span>
                 )}
                 </Link>
             </div>
