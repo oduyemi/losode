@@ -50,15 +50,18 @@ export default function Filters() {
         </div>
 
         <div>
-          <div className="flex justify-between items-center mb-3">
-            <p className="text-sm font-semibold">Category</p>
+          <div className="flex justify-between items-center mb-3"> 
+            <div className="flex flex-col gap-2">
+              <p className="text-sm font-semibold">Category</p>
+              <span className="text-xs text-gray-400">All</span>
+            </div>
 
             {filters.category.length > 0 && (
               <button
                 onClick={() => dispatch(setCategory([]))}
-                className="text-xs text-gray-400 underline"
+                className="text-xs text-gray-400 underline pt-5"
               >
-                Clear
+                Unselect all
               </button>
             )}
           </div>
